@@ -1,0 +1,15 @@
+{
+    "env": {
+        "es6": true,
+        "node": true,
+        "mocha": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 8
+    },
+    "extends": "standard",
+    "rules": {
+        "arrow-parens": ["error", "as-needed"],
+        "linebreak-style": ["error", "unix"]
+    }
+}
