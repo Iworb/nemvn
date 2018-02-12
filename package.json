@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node server/index.js",
+    "start": "nuxt build & cross-env NODE_ENV=production node server/index.js",
     "dev": "node server/index.js"
   },
   "author": "Aleksandr Koshevierov <iworb.ne@gmail.com>",

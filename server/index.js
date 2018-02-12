@@ -4,11 +4,12 @@ const app = express()
 
 const {Nuxt, Builder} = require('nuxt')
 const nuxtConfig = require('@/nuxt.config')
+nuxtConfig.dev = process.env.NODE_ENV !== 'production'
 const nuxt = new Nuxt(nuxtConfig)
-if (process.env.NODE_ENV !== 'production') {
-  (new Builder(nuxt)).build()
-}
 
+if (nuxtConfig.dev) {
+  new Builder(nuxt).build()
+}
 app.use(nuxt.render)
 
 app.listen(3000, () => {
