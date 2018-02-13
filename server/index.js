@@ -1,6 +1,18 @@
 require('module-alias/register')
+const config = require('@config')
 const express = require('express')
+const session = require('express-session')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const app = express()
+
+const configSession = config.session
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+app.use(bodyParser.json())
+app.use(cookieParser())
+app.use(session(configSession))
 
 const {Nuxt, Builder} = require('nuxt')
 const nuxtConfig = require('@/nuxt.config')
