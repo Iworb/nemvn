@@ -1,31 +1,24 @@
 require('module-alias/register')
 const config = require('@config')
-const express = require('express')
-const session = require('express-session')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const app = express()
+const logger = require('@engine/logger')
 
-const configSession = config.session
-app.use(bodyParser.urlencoded({
-  extended: true
-}))
-app.use(bodyParser.json())
-app.use(cookieParser())
-app.use(session(configSession))
+const chalk = require('chalk')
+const moment = require('moment')
 
-const {Nuxt, Builder} = require('nuxt')
-const nuxtConfig = require('@/nuxt.config')
-nuxtConfig.dev = process.env.NODE_ENV !== 'production'
-const nuxt = new Nuxt(nuxtConfig)
+const app = require('@engine/express')()
 
-if (nuxtConfig.dev) {
-  new Builder(nuxt).build()
-}
-app.use(nuxt.render)
+require('@helpers/safeStop')
 
-app.listen(3000, () => {
-  console.log(`Application was started at the 3000th port`)
+logger.info(chalk.bold('-----------------[ Server starting at %s ]-----------------'), moment().format('YYYY-MM-DD HH:mm:ss.SSS'))
+
+app.listen(config.port, config.ip, () => {
+  logger.info('----------------------------[ Application started! ]----------------------------')
+  logger.info(`Environment:\t${chalk.underline.bold(process.env.NODE_ENV)}`)
+  logger.info(`IP:\t\t\t${config.ip}`)
+  logger.info(`Port:\t\t\t${config.port}`)
+  logger.info('--------------------------------------------------------------------------------')
+  require('@helpers/sysinfo')
+  logger.info('--------------------------------------------------------------------------------')
 })
 
 exports = module.exports = app

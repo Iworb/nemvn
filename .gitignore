@@ -30,3 +30,5 @@ dump.rdb
 .nuxt
 .vscode
 .manual
+server/config/config.js
+logs
