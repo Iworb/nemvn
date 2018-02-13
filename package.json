@@ -6,7 +6,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "nuxt build & cross-env NODE_ENV=production node server/index.js",
-    "dev": "node server/index.js"
+    "dev": "node %NODE_DEBUG_OPTION% server/index.js"
   },
   "license": "MIT",
   "_moduleAliases": {
@@ -20,6 +20,7 @@
     "chalk": "^2.3.1",
     "clui": "^0.3.6",
     "compression": "^1.7.1",
+    "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "cross-env": "^5.1.3",
     "eslint": "^4.17.0",
@@ -31,6 +32,7 @@
     "mkdirp": "^0.5.1",
     "module-alias": "^2.0.6",
     "moment": "^2.20.1",
+    "mongoose": "^5.0.4",
     "morgan": "^1.9.0",
     "nuxt": "^1.3.0",
     "pretty-bytes": "^4.0.2",

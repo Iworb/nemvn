@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const helmet = require('helmet')
+const MongoStore = require('connect-mongo')(session)
 const {Nuxt, Builder} = require('nuxt')
 
 /**
@@ -59,9 +60,15 @@ function initHelmetHeaders (app) {
 /**
  * Initialize session
  * @param {any} app
+ * @param {db} db
  */
-function initSession (app) {
-  app.use(session(config.session))
+function initSession (app, db) {
+  const configSession = config.session
+  configSession.store = new MongoStore({
+    mongooseConnection: db,
+    autoReconnect: true
+  })
+  app.use(session(configSession))
 }
 
 /**
@@ -77,12 +84,12 @@ function initNuxt (app) {
   app.use(nuxt.render)
 }
 
-module.exports = () => {
+module.exports = db => {
   const app = express()
 
   initMiddleware(app)
   initHelmetHeaders(app)
-  initSession(app)
+  initSession(app, db)
   initNuxt(app)
 
   return app

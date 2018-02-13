@@ -5,7 +5,8 @@ const logger = require('@engine/logger')
 const chalk = require('chalk')
 const moment = require('moment')
 
-const app = require('@engine/express')()
+const db = require('@engine/mongo')()
+const app = require('@engine/express')(db)
 
 require('@helpers/safeStop')
 

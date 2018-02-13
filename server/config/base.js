@@ -16,6 +16,14 @@ module.exports = {
       secure: false
     }
   },
+  db: {
+    uri: 'mongodb://localhost/nemvn?authSource=admin',
+    options: {
+      socketTimeoutMS: 0,
+      keepAlive: true,
+      reconnectTries: 30
+    }
+  },
   logging: {
     console: {
       level: 'info'
