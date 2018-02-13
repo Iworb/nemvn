@@ -6,7 +6,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "nuxt build & cross-env NODE_ENV=production node server/index.js",
-    "dev": "node %NODE_DEBUG_OPTION% server/index.js"
+    "dev": "node server/index.js"
   },
   "license": "MIT",
   "_moduleAliases": {
