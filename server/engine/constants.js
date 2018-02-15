@@ -1,5 +1,9 @@
 module.exports = {
   'E': {
+    'DENIED': 'E_DENIED',
+    'DISABLED': 'E_DISABLED',
+    'INVALID': 'E_INVALID',
+    'NOT_FOUND': 'E_NOT_FOUND',
     'REQUIRED': 'E_REQUIRED',
     'UNIQUE': 'E_UNIQUE',
     'NOT_VALID': 'E_NOT_VALID',

@@ -1,4 +1,6 @@
 const c = require('@engine/constants')
+const response = require('@engine/response')
+const {FieldsError} = require('@engine/errors')
 
 const mongoose = require('mongoose')
 const crypto = require('crypto')
@@ -50,6 +52,7 @@ const userSchema = mongoose.Schema({
     default: 1
   }
 }, {
+  id: false,
   timestamps: true,
   toObject: {
     virtuals: true
@@ -105,34 +108,43 @@ userSchema.virtual('avatar').get(function () {
   }
 })
 
-userSchema.statics.updateUser = function (req, res, next) {
+userSchema.statics.createUser = function (req, res, next) {
   let values = _.pick(req.body, _.keys(userSchema.paths))
   if (values._id) delete values._id
   values = _.pickBy(flatten(values), _.identity)
-  return this.findById(req.params.id)
-    .then(user => {
-      if (
-        ((req.body.passNew && req.body.passNew.length) ||
-          (req.body.passNewConfirm && req.body.passNewConfirm.length)) &&
-        req.body.passNew !== req.body.passNewConfirm) {
-        user.invalidate('passNew', c.E.NOT_MATCH)
-        throw user.invalidate('passNewConfirm', c.E.NOT_MATCH)
+  const newUser = new this(values)
+  return newUser.save().then(user => {
+    return response.json(res, _.omit(user.toObject(), 'local.password'))
+  }).catch(next)
+}
+
+userSchema.statics.updateUser = async function (req, res, next) {
+  let values = _.pick(req.body, _.keys(userSchema.paths))
+  if (values._id) delete values._id
+  values = _.pickBy(flatten(values), _.identity)
+  if (
+    ((req.body.passNew && req.body.passNew.length) ||
+      (req.body.passNewConfirm && req.body.passNewConfirm.length)) &&
+    req.body.passNew !== req.body.passNewConfirm) {
+    return next(new FieldsError({passNew: c.E.NOT_MATCH, passNewConfirm: c.E.NOT_MATCH}))
+  }
+  try {
+    const user = req.params.id ? await this.findById(req.params.id) : req.user
+    if (user._id !== req.user._id) return response.json(res, null, response.FORBIDDEN, c.E.DENIED)
+    if (req.body.passNew) {
+      if (_.isUndefined(values['local.password'])) {
+        return next(user.invalidate('local.password', c.E.REQUIRED))
       }
-      if (req.body.passNew) {
-        if (!_.isDefined(values['local.password'])) {
-          throw user.invalidate('local.password', c.E.REQUIRED)
-        }
-        if (!user.verifyPasswordSync(values['local.password'])) {
-          throw user.invalidate('local.password', c.E.NOT_VALID)
-        }
-        values['local.password'] = req.body.passNew
+      if (!user.verifyPasswordSync(values['local.password'])) {
+        return next(user.invalidate('local.password', c.E.NOT_VALID))
       }
-      return user.update(values)
-    })
-    .then(() => {
-      return res.json(true)
-    })
-    .catch(next)
+      values['local.password'] = req.body.passNew
+    }
+    await user.update(values)
+    return res.json(true)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 module.exports = mongoose.model('User', userSchema)

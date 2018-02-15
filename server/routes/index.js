@@ -1,12 +1,15 @@
 const c = require('@engine/constants')
 const logger = require('@engine/logger')
 const response = require('@engine/response')
+const EngineErrors = require('@engine/errors')
 
 const mongoose = require('mongoose')
 const _ = require('lodash')
 const router = require('express').Router()
 
 module.exports = (app, ...middlewares) => {
+  app.use(require('./auth'))
+
   router.use('/users', require('./user'))
   app.use('/api', router)
 
@@ -30,6 +33,8 @@ module.exports = (app, ...middlewares) => {
           field = field.substring(0, field.lastIndexOf('_'))
           return response.json(res, null, response.BAD_REQUEST, null, {fields: {[field]: c.E.UNIQUE}})
       }
+    } else if (err instanceof EngineErrors.FieldsError) {
+      return response.json(res, null, response.BAD_REQUEST, null, {fields: err.fields})
     } else {
       return response.json(res, null, response.SERVER_ERROR, err.message)
     }

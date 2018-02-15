@@ -91,6 +91,7 @@ module.exports = db => {
   initHelmetHeaders(app)
   initSession(app, db)
 
+  require('./auth')(app)
   require('@routes')(app, initNuxt)
 
   return app

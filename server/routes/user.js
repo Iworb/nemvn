@@ -1,16 +1,31 @@
 const response = require('@engine/response')
 const User = require('@models/user')
+const {isAuthenticated} = require('@engine/auth/helpers')
 
-const _ = require('lodash')
-const flatten = require('flat')
 const router = require('express').Router()
 
 router.get('/', (req, res, next) => {
-  User.find({}, {'local.password': 0})
+  const limit = req.body.limit || req.query.limit || 50
+  let page = req.body.page || req.query.page || 1
+  let total
+  if (page < 1) page = 1
+  page--
+  User.count()
+    .then(c => {
+      total = c
+      return User.find({}, {name: 1}).limit(limit).skip(limit * page)
+    })
     .then(users => {
-      return res.json(users)
+      return res.json({
+        total: total,
+        items: users
+      })
     })
     .catch(next)
+})
+
+router.get('/me', isAuthenticated, (req, res, next) => {
+  return res.json(req.user.toObject())
 })
 
 router.get('/:id', (req, res, next) => {
@@ -21,24 +36,19 @@ router.get('/:id', (req, res, next) => {
     .catch(next)
 })
 
-router.post('/', (req, res, next) => {
-  let values = _.pick(req.body, _.keys(User.schema.paths))
-  if (values._id) delete values._id
-  values = _.pickBy(flatten(values), _.identity)
-  const newUser = new User(values)
-  return newUser.save().then(user => {
-    return response.json(res, _.omit(user.toObject(), 'local.password'))
-  }).catch(next)
-})
+router.post('/', User.createUser.bind(User))
 
-router.patch('/:id', User.updateUser.bind(User))
+router.patch('/me', isAuthenticated, User.updateUser.bind(User))
+
+router.patch('/:id', isAuthenticated, User.updateUser.bind(User))
 
 router.delete('/:id', (req, res, next) => {
-  User.findByIdAndRemove(req.params.id)
-    .then(() => {
-      return res.json(true)
-    })
-    .catch(next)
+  return response(res, null, response.REQUEST_FAILED)
+  // User.findByIdAndRemove(req.params.id)
+  //   .then(() => {
+  //     return res.json(true)
+  //   })
+  //   .catch(next)
 })
 
 module.exports = router
