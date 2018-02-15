@@ -90,7 +90,8 @@ module.exports = db => {
   initMiddleware(app)
   initHelmetHeaders(app)
   initSession(app, db)
-  initNuxt(app)
+
+  require('@routes')(app, initNuxt)
 
   return app
 }

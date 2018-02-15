@@ -1,7 +1,7 @@
 module.exports = {
   logging: {
     console: {
-      level: 'debug'
+      level: 'info'
     }
   }
 }

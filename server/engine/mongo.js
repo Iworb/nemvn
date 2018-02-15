@@ -11,7 +11,7 @@ module.exports = () => {
   if (mongoose.connection.readyState !== 1) {
     logger.info(`Connecting to Mongo ${config.db.uri} ...`)
     mongoose.connection.on('error', err => {
-      if (err.message.code === 'ETIMEDOUT') {
+      if (err.message && err.message.match(/failed to connect to server .* on first connect/)) {
         logger.warn('Mongo connection timeout!', err)
         setTimeout(() => {
           mongoose.connect(config.db.uri, config.db.options)
@@ -29,10 +29,6 @@ module.exports = () => {
     mongoose.connect(config.db.uri, config.db.options)
       .then(() => {
         mongoose.set('debug', env.isDev())
-      })
-      .catch(err => {
-        logger.error('Could not connect to MongoDB!')
-        return logger.error(err)
       })
   } else {
     logger.info('Mongo already connected.')
