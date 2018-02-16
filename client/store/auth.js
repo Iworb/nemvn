@@ -9,10 +9,6 @@ export const mutations = {
 }
 
 export const actions = {
-  nuxtServerInit ({commit}, {req}) {
-    console.log(req)
-    console.log(arguments)
-  },
   async login ({commit}, {username, password}) {
     try {
       const data = await this.$axios.$post('/login', {username, password})
