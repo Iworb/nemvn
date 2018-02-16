@@ -7,9 +7,8 @@ const LocalStrategy = require('passport-local').Strategy
 
 passport.use('local', new LocalStrategy({
   usernameField: 'username',
-  passwordField: 'password',
-  passReqToCallback: true
-}, async (req, username, password, done) => {
+  passwordField: 'password'
+}, async (username, password, done) => {
   try {
     const user = await User.findOne({
       $or: [
