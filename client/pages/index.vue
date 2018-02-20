@@ -1,55 +1,27 @@
 <template>
-    <div class="container">
+    <div>
         <h1>Please login to see the secret content</h1>
-        <form v-if="!$store.state.auth.user" @submit.prevent="login">
-            <p class="error" v-if="formError">{{ formError }}</p>
-            <p><i>To login, use <b>camin</b> as username and <b>qwe123</b> as password.</i></p>
-            <p>Username: <input type="text" v-model="formUsername" name="username" /></p>
-            <p>Password: <input type="password" v-model="formPassword" name="password" /></p>
-            <button type="submit">Login</button>
-        </form>
+        <div v-if="!$store.state.auth.user" >
+            Not logged in
+        </div>
         <div v-else>
-            Hello {{ $store.state.auth.user.username }}!
+            Hello {{ $store.state.auth.user.name }}!
             <pre>I am the secret content, I am shown only when the use is connected.</pre>
             <p><i>You can also refresh this page, you'll still be connected!</i></p>
-            <button @click="logout">Logout</button>
+        </div>
+        <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi feugiat diam et semper commodo. Praesent et lobortis nisi. Nulla laoreet urna sed sem fringilla, non consectetur dui feugiat. Proin elit eros, sagittis sit amet condimentum id, consectetur id diam. Integer sed nunc vitae nulla rutrum malesuada. Nunc aliquet augue eget mattis aliquam. Praesent eleifend varius orci rutrum auctor. Phasellus neque ipsum, euismod nec massa eget, aliquam porta ex.
+
+            Vivamus dapibus enim in suscipit porta. Vivamus ac pulvinar nisl. Proin id arcu ut leo pellentesque facilisis at lobortis sapien. In rutrum varius massa, sed egestas enim volutpat in. Nunc pharetra sagittis dui, id bibendum dolor congue et. Nam iaculis, felis in pretium sagittis, massa est lobortis leo, vel tincidunt tellus sem eu arcu. Mauris ultricies suscipit congue. Sed quis lobortis enim. Cras in tellus eu erat auctor vehicula. Nam urna nisi, tristique vel fringilla vitae, fringilla quis ligula. Fusce dictum ipsum ut ornare euismod. Fusce pulvinar justo nec neque laoreet scelerisque.
+
+            Aenean lorem neque, sollicitudin at ex ut, ullamcorper condimentum diam. Fusce enim quam, ultricies nec magna ut, porttitor commodo nibh. Curabitur vitae suscipit elit. Vestibulum sit amet libero lobortis, accumsan dolor congue, iaculis neque. Nunc sodales sollicitudin augue quis porta. Vestibulum lacus quam, elementum id euismod vitae, sollicitudin at massa. Maecenas eget ultrices tellus. Nullam eu placerat quam.
+
+            Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla porttitor dui id neque vehicula, ut suscipit metus laoreet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut fermentum enim nec egestas accumsan. Nulla sit amet orci sit amet justo egestas efficitur. Praesent vel libero metus. Mauris quam sapien, condimentum non varius eget, tincidunt et lectus.
+
+            Nunc porttitor pretium purus ut maximus. Curabitur viverra imperdiet sapien, eget tincidunt ligula tincidunt volutpat. Vivamus faucibus laoreet diam non pellentesque. Cras egestas dui at rutrum maximus. Sed vehicula lectus a lorem convallis, eget varius nulla dignissim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam vel sapien non augue finibus scelerisque ut ac nibh. Sed non facilisis quam.
         </div>
     </div>
 </template>
-
-<script>
-    export default {
-      data () {
-        return {
-          formError: null,
-          formUsername: '',
-          formPassword: ''
-        }
-      },
-      methods: {
-        async login() {
-          try {
-            await this.$store.dispatch('auth/login', {
-              username: this.formUsername,
-              password: this.formPassword
-            })
-            this.formUsername = ''
-            this.formPassword = ''
-            this.formError = null
-          } catch (e) {
-            this.formError = e.message
-          }
-        },
-        async logout() {
-          try {
-            await this.$store.dispatch('auth/logout')
-          } catch (e) {
-            this.formError = e.message
-          }
-        }
-      }
-    }
-</script>
 
 <style lang="stylus">
     .container

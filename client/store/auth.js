@@ -10,15 +10,13 @@ export const mutations = {
 
 export const actions = {
   async login ({commit}, {username, password}) {
-    try {
-      const data = await this.$axios.$post('/login', {username, password})
-      commit('SET_USER', data)
-    } catch (err) {
-      throw err
-    }
+    const data = await this.$axios.$post('/login', {username, password})
+    commit('SET_USER', data)
+    this.$router.push({path: '/'})
   },
   async logout ({commit}) {
-    this.$axios.post('/logout')
+    await this.$axios.post('/logout')
     commit('SET_USER', null)
+    this.$router.push({path: '/login'})
   }
 }
