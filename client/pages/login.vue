@@ -45,7 +45,7 @@
 
   export default {
     layout: 'clean',
-    middleware: [],
+    auth: false,
     mixins: [resetFormErrors, catchFormErrors],
     data () {
       return {

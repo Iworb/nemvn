@@ -70,6 +70,7 @@
     methods: {
       async logout () {
         try {
+          this.logoutDialog = false
           await this.$store.dispatch('auth/logout')
         } catch (e) {
           console.log(e.message)
