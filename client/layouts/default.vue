@@ -56,8 +56,6 @@
 </template>
 
 <script>
-  import {resetFormErrors, catchFormErrors} from '../mixins'
-
   export default {
     data() {
       return {

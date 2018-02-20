@@ -21,8 +21,6 @@ module.exports = {
     `~assets/style/app.styl`
   ],
   router: {
-    linkActiveClass: 'router-link-active',
-    linkExactActiveClass: 'router-link-exact-active',
     middleware: 'auth'
   }
 }

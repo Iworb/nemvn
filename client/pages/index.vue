@@ -1,12 +1,8 @@
 <template>
     <div>
-        <h1>Please login to see the secret content</h1>
-        <div v-if="!$store.state.auth.user" >
-            Not logged in
-        </div>
-        <div v-else>
+        <div>
             Hello {{ $store.state.auth.user.name }}!
-            <pre>I am the secret content, I am shown only when the use is connected.</pre>
+            <pre>I am the secret content, I am shown only when the user is connected.</pre>
             <p><i>You can also refresh this page, you'll still be connected!</i></p>
         </div>
         <div>
@@ -22,10 +18,3 @@
         </div>
     </div>
 </template>
-
-<style lang="stylus">
-    .container
-        padding 100px
-    .error
-        color red
-</style>
