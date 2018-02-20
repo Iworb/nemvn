@@ -13,7 +13,7 @@ module.exports = app => {
   })
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, '-local.password')
+    User.findById(id, {'local.password': 0})
       .then(user => {
         // Check that the user is not disabled or deleted
         if (user.status !== 1) return done(null, false)

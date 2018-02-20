@@ -12,7 +12,9 @@ router.post('/login', (req, res, next) => {
     if (!user) return response.json(res, null, response.BAD_REQUEST, c.E.NOT_FOUND)
     req.login(user, err => {
       if (err) return next(err)
-      return res.json(true)
+      const u = user.toObject()
+      if (u.local && u.local.password) delete u.local.password
+      return res.json(u)
     })
   })(req, res, next)
 })
